@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { memoryDb } from '@/lib/memory-db'
+
+// Simple in-memory storage for Vercel
+let participants: any[] = []
 
 export async function POST(request: NextRequest) {
   try {
@@ -14,7 +16,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Check if email already exists
-    const existingParticipant = await memoryDb.findUnique({ email })
+    const existingParticipant = participants.find(p => p.email === email)
 
     if (existingParticipant) {
       return NextResponse.json(
@@ -24,11 +26,15 @@ export async function POST(request: NextRequest) {
     }
 
     // Create new participant
-    const participant = await memoryDb.create({
+    const participant = {
+      id: Math.random().toString(36).substr(2, 9),
       email,
       nickname,
-      city
-    })
+      city,
+      createdAt: new Date().toISOString()
+    }
+
+    participants.push(participant)
 
     return NextResponse.json(participant, { status: 201 })
   } catch (error) {
@@ -42,7 +48,6 @@ export async function POST(request: NextRequest) {
 
 export async function GET() {
   try {
-    const participants = await memoryDb.findMany()
     return NextResponse.json(participants)
   } catch (error) {
     console.error('Error fetching participants:', error)
