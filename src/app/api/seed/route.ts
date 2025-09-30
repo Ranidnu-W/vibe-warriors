@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server'
-import { memoryDb } from '@/lib/memory-db'
+import { kvDb } from '@/lib/kv-db'
 
 export async function POST() {
   try {
@@ -24,7 +24,7 @@ export async function POST() {
 
     // Add sample data
     for (const participant of sampleParticipants) {
-      await memoryDb.create(participant)
+      await kvDb.create(participant)
     }
 
     return NextResponse.json({ message: 'Sample data added successfully!' })
