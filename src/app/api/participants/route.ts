@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { kvDb } from '@/lib/kv-db'
+import { memoryDb } from '@/lib/memory-db'
 
 export async function POST(request: NextRequest) {
   try {
@@ -14,7 +14,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Check if email already exists
-    const existingParticipant = await kvDb.findUnique({ email })
+    const existingParticipant = await memoryDb.findUnique({ email })
 
     if (existingParticipant) {
       return NextResponse.json(
@@ -24,7 +24,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Create new participant
-    const participant = await kvDb.create({
+    const participant = await memoryDb.create({
       email,
       nickname,
       city
@@ -42,7 +42,7 @@ export async function POST(request: NextRequest) {
 
 export async function GET() {
   try {
-    const participants = await kvDb.findMany()
+    const participants = await memoryDb.findMany()
     return NextResponse.json(participants)
   } catch (error) {
     console.error('Error fetching participants:', error)
