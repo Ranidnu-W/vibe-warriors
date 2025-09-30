@@ -1,9 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { prisma, initDatabase } from '@/lib/db'
+import { memoryDb } from '@/lib/memory-db'
 
 export async function POST(request: NextRequest) {
   try {
-    await initDatabase()
     const { email, nickname, city } = await request.json()
 
     // Validate required fields
@@ -15,9 +14,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Check if email already exists
-    const existingParticipant = await prisma.participant.findUnique({
-      where: { email }
-    })
+    const existingParticipant = await memoryDb.findUnique({ email })
 
     if (existingParticipant) {
       return NextResponse.json(
@@ -27,12 +24,10 @@ export async function POST(request: NextRequest) {
     }
 
     // Create new participant
-    const participant = await prisma.participant.create({
-      data: {
-        email,
-        nickname,
-        city
-      }
+    const participant = await memoryDb.create({
+      email,
+      nickname,
+      city
     })
 
     return NextResponse.json(participant, { status: 201 })
@@ -47,11 +42,7 @@ export async function POST(request: NextRequest) {
 
 export async function GET() {
   try {
-    await initDatabase()
-    const participants = await prisma.participant.findMany({
-      orderBy: { createdAt: 'desc' }
-    })
-
+    const participants = await memoryDb.findMany()
     return NextResponse.json(participants)
   } catch (error) {
     console.error('Error fetching participants:', error)

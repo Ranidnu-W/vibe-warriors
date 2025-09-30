@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server'
-import { prisma } from '@/lib/prisma'
+import { memoryDb } from '@/lib/memory-db'
 
 export async function POST() {
   try {
@@ -22,13 +22,9 @@ export async function POST() {
       }
     ]
 
-    // Clear existing data and add sample data
-    await prisma.participant.deleteMany()
-    
+    // Add sample data
     for (const participant of sampleParticipants) {
-      await prisma.participant.create({
-        data: participant
-      })
+      await memoryDb.create(participant)
     }
 
     return NextResponse.json({ message: 'Sample data added successfully!' })
