@@ -34,7 +34,7 @@ export default function Home() {
       } else {
         setSubmitStatus('error')
       }
-    } catch (error) {
+    } catch {
       setSubmitStatus('error')
     } finally {
       setIsSubmitting(false)
@@ -217,7 +217,7 @@ export default function Home() {
                     animate={{ opacity: 1, y: 0 }}
                     className="text-center text-green-400 font-medium"
                   >
-                    🎉 Successfully joined the waitlist! We'll be in touch soon.
+                    🎉 Successfully joined the waitlist! We&apos;ll be in touch soon.
                   </motion.div>
                 )}
 
