@@ -1,8 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { prisma } from '@/lib/prisma'
+import { prisma, initDatabase } from '@/lib/db'
 
 export async function POST(request: NextRequest) {
   try {
+    await initDatabase()
     const { email, nickname, city } = await request.json()
 
     // Validate required fields
@@ -46,6 +47,7 @@ export async function POST(request: NextRequest) {
 
 export async function GET() {
   try {
+    await initDatabase()
     const participants = await prisma.participant.findMany({
       orderBy: { createdAt: 'desc' }
     })
