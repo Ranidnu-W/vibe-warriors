@@ -1,7 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server'
 
 // Simple in-memory storage for Vercel
-let participants: any[] = []
+const participants: Array<{
+  id: string
+  email: string
+  nickname: string
+  city: string
+  createdAt: string
+}> = []
 
 export async function POST(request: NextRequest) {
   try {

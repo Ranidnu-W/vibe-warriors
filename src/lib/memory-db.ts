@@ -7,7 +7,7 @@ interface Participant {
   createdAt: string
 }
 
-let participants: Participant[] = []
+const participants: Participant[] = []
 
 export const memoryDb = {
   async create(data: Omit<Participant, 'id' | 'createdAt'>) {
